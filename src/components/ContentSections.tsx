@@ -29,10 +29,10 @@ const FAQ_ITEMS = [
 
 interface ContentSectionsProps {
   visible: Set<string>;
-  ref: (id: string) => (el: HTMLElement | null) => void;
+  revealRef: (id: string) => (el: HTMLElement | null) => void;
 }
 
-export default function ContentSections({ visible, ref }: ContentSectionsProps) {
+export default function ContentSections({ visible, revealRef: ref }: ContentSectionsProps) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   return (

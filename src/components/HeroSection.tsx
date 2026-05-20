@@ -24,10 +24,10 @@ const ZONES = [
 
 interface HeroSectionProps {
   visible: Set<string>;
-  ref: (id: string) => (el: HTMLElement | null) => void;
+  revealRef: (id: string) => (el: HTMLElement | null) => void;
 }
 
-export default function HeroSection({ visible, ref }: HeroSectionProps) {
+export default function HeroSection({ visible, revealRef: ref }: HeroSectionProps) {
   const [activeZone, setActiveZone] = useState<number | null>(null);
 
   return (

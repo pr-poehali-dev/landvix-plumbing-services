@@ -24,24 +24,24 @@ function useScrollReveal() {
     return () => observer.disconnect();
   }, []);
 
-  const ref = (id: string) => (el: HTMLElement | null) => {
+  const revealRef = (id: string) => (el: HTMLElement | null) => {
     if (el) {
       el.dataset.revealId = id;
       refs.current.set(id, el);
     }
   };
 
-  return { visible, ref };
+  return { visible, revealRef };
 }
 
 export default function Index() {
-  const { visible, ref } = useScrollReveal();
+  const { visible, revealRef } = useScrollReveal();
 
   return (
     <div className="min-h-screen bg-white font-golos overflow-x-hidden">
       <Header />
-      <HeroSection visible={visible} ref={ref} />
-      <ContentSections visible={visible} ref={ref} />
+      <HeroSection visible={visible} revealRef={revealRef} />
+      <ContentSections visible={visible} revealRef={revealRef} />
       <ContactsSection />
     </div>
   );
