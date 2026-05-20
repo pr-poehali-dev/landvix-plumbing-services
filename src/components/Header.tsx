@@ -9,11 +9,7 @@ const navLinks = [
   { href: '#faq', label: 'FAQ' },
 ];
 
-interface HeaderProps {
-  onOpenModal: () => void;
-}
-
-export default function Header({ onOpenModal }: HeaderProps) {
+export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -42,9 +38,9 @@ export default function Header({ onOpenModal }: HeaderProps) {
             <Icon name="Phone" size={15} className="text-orange-500" />
             +7 (900) 123-45-67
           </a>
-          <button onClick={onOpenModal} className="btn-orange px-4 py-2 rounded-xl text-sm font-bold text-white">
+          <a href="#contacts" className="btn-orange px-4 py-2 rounded-xl text-sm font-bold text-white">
             Вызвать мастера
-          </button>
+          </a>
         </div>
 
         <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden p-2 rounded-lg text-slate-900">
@@ -63,9 +59,9 @@ export default function Header({ onOpenModal }: HeaderProps) {
             <Icon name="Phone" size={16} className="text-orange-500" />
             +7 (900) 123-45-67
           </a>
-          <button onClick={() => { onOpenModal(); setMenuOpen(false); }} className="btn-orange px-4 py-3 rounded-xl text-center font-bold text-white">
+          <a href="#contacts" className="btn-orange px-4 py-3 rounded-xl text-center font-bold text-white">
             Вызвать мастера
-          </button>
+          </a>
         </div>
       )}
     </header>
