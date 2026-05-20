@@ -3,6 +3,7 @@ import Header from '@/components/Header';
 import HeroSection from '@/components/HeroSection';
 import ContentSections from '@/components/ContentSections';
 import ContactsSection from '@/components/ContactsSection';
+import CallModal from '@/components/CallModal';
 
 function useScrollReveal() {
   const [visible, setVisible] = useState<Set<string>>(new Set());
@@ -36,13 +37,15 @@ function useScrollReveal() {
 
 export default function Index() {
   const { visible, revealRef } = useScrollReveal();
+  const [modalOpen, setModalOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-white font-golos overflow-x-hidden">
-      <Header />
-      <HeroSection visible={visible} revealRef={revealRef} />
+      <Header onOpenModal={() => setModalOpen(true)} />
+      <HeroSection visible={visible} revealRef={revealRef} onOpenModal={() => setModalOpen(true)} />
       <ContentSections visible={visible} revealRef={revealRef} />
       <ContactsSection />
+      <CallModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   );
 }

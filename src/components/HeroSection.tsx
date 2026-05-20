@@ -25,9 +25,10 @@ const ZONES = [
 interface HeroSectionProps {
   visible: Set<string>;
   revealRef: (id: string) => (el: HTMLElement | null) => void;
+  onOpenModal: () => void;
 }
 
-export default function HeroSection({ visible, revealRef: ref }: HeroSectionProps) {
+export default function HeroSection({ visible, revealRef: ref, onOpenModal }: HeroSectionProps) {
   const [activeZone, setActiveZone] = useState<number | null>(null);
 
   return (
@@ -63,9 +64,9 @@ export default function HeroSection({ visible, revealRef: ref }: HeroSectionProp
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 mb-10 animate-fade-up" style={{ animationDelay: '0.3s', opacity: 0 }}>
-              <a href="#contacts" className="btn-orange px-7 py-4 rounded-2xl text-base font-bold text-white text-center">
+              <button onClick={onOpenModal} className="btn-orange px-7 py-4 rounded-2xl text-base font-bold text-white text-center">
                 Вызвать мастера
-              </a>
+              </button>
               <a href="tel:+79001234567" className="flex items-center justify-center gap-2 px-7 py-4 rounded-2xl border-2 border-white/30 text-white font-bold hover:bg-white/10 transition-all text-base">
                 <Icon name="Phone" size={18} />
                 +7 (900) 123-45-67
