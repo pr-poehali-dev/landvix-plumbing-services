@@ -80,10 +80,7 @@ export default function HeroSection({ visible, revealRef: ref }: HeroSectionProp
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-blue-700" />
         <div className="absolute inset-0 bg-mesh opacity-60" />
 
-        <div className="absolute right-0 top-0 bottom-0 w-1/2 hidden lg:block">
-          <img src={HERO_IMAGE} alt="Мастер сантехник" className="w-full h-full object-cover opacity-25 mix-blend-luminosity" />
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-blue-900/60 to-transparent" />
-        </div>
+
 
         <div className="relative max-w-6xl mx-auto px-4 py-20 grid lg:grid-cols-2 gap-12 items-center">
           <div className="text-white">
