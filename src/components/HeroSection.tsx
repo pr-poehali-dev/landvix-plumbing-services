@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Icon from '@/components/ui/icon';
 
 const HERO_IMAGE = 'https://cdn.poehali.dev/projects/cb066a4a-b259-46cf-8abe-34a46dc855cf/files/ceb269fb-4e0d-409f-b49f-f63c48a5dc68.jpg';
+const MASTER_IMAGE = 'https://cdn.poehali.dev/projects/cb066a4a-b259-46cf-8abe-34a46dc855cf/files/e7d2c5a5-2fd3-4904-a12b-5a9f5da9c9ea.jpg';
 const PORTFOLIO_IMAGE = 'https://cdn.poehali.dev/projects/cb066a4a-b259-46cf-8abe-34a46dc855cf/files/6d5352a8-8f9e-4293-a899-478dbceeae6f.jpg';
 
 export const SERVICES = [
@@ -128,25 +129,43 @@ export default function HeroSection({ visible, revealRef: ref }: HeroSectionProp
             </div>
           </div>
 
-          <div className="hidden lg:grid grid-cols-2 gap-4">
-            {[
-              { icon: 'Clock', text: 'Выезд 24/7', sub: 'Без выходных' },
-              { icon: 'ShieldCheck', text: 'Гарантия 2 года', sub: 'На все работы' },
-              { icon: 'Award', text: 'Лицензия', sub: 'Официально' },
-              { icon: 'Star', text: '4.97 / 5', sub: '320+ отзывов' },
-            ].map((b, i) => (
-              <div
-                key={i}
-                className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-5 flex flex-col gap-2 hover:bg-white/15 transition-all animate-float"
-                style={{ animationDelay: `${i * 0.4}s` }}
-              >
-                <div className="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center">
-                  <Icon name={b.icon} size={20} className="text-orange-300" fallback="Star" />
-                </div>
-                <div className="text-white font-bold">{b.text}</div>
-                <div className="text-blue-200 text-sm">{b.sub}</div>
+          <div className="hidden lg:flex items-end justify-center relative">
+            {/* Декоративное кольцо */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-[420px] h-[420px] rounded-full border border-white/10" />
+              <div className="absolute w-[340px] h-[340px] rounded-full border border-white/10" />
+            </div>
+
+            {/* Фото мастера */}
+            <div className="relative z-10 w-80 xl:w-96">
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl" style={{ boxShadow: '0 30px 80px rgba(0,0,0,0.5)' }}>
+                <img
+                  src={MASTER_IMAGE}
+                  alt="Мастер АкваМастер"
+                  className="w-full h-[480px] xl:h-[540px] object-cover object-top"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent" />
               </div>
-            ))}
+
+              {/* Бейдж рейтинга */}
+              <div className="absolute -top-4 -right-4 bg-white rounded-2xl px-4 py-3 shadow-xl flex items-center gap-2">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <Icon key={i} name="Star" size={13} className="text-yellow-400 fill-yellow-400" />
+                  ))}
+                </div>
+                <div>
+                  <div className="font-bold text-slate-900 text-sm leading-none">4.97</div>
+                  <div className="text-gray-400 text-[10px]">320+ отзывов</div>
+                </div>
+              </div>
+
+              {/* Бейдж опыта */}
+              <div className="absolute -bottom-4 -left-4 bg-orange-500 rounded-2xl px-4 py-3 shadow-xl text-white">
+                <div className="font-oswald text-2xl font-bold leading-none">8 лет</div>
+                <div className="text-orange-100 text-xs">опыта работы</div>
+              </div>
+            </div>
           </div>
         </div>
 
