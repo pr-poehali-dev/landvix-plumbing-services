@@ -1,6 +1,15 @@
 import { useState } from 'react';
 import Icon from '@/components/ui/icon';
 
+const ZONES = [
+  { id: 1, name: 'Центральный', sub: 'Ядро города', time: '20 мин', address: 'ул. Ленина, 45', points: '200,60 270,100 270,180 200,220 130,180 130,100' },
+  { id: 2, name: 'Советский', sub: 'Северо-запад', time: '35 мин', address: 'пр. Победы, 12', points: '90,40 160,80 160,160 90,200 20,160 20,80' },
+  { id: 3, name: 'Кировский', sub: 'Северо-восток', time: '40 мин', address: 'ул. Южная, 88', points: '310,40 380,80 380,160 310,200 240,160 240,80' },
+  { id: 4, name: 'Ленинский', sub: 'Запад', time: '30 мин', address: 'ул. Западная, 3', points: '90,200 160,240 160,320 90,360 20,320 20,240' },
+  { id: 5, name: 'Октябрьский', sub: 'Восток', time: '45 мин', address: 'ул. Восточная, 17', points: '310,200 380,240 380,320 310,360 240,320 240,240' },
+  { id: 6, name: 'Загородная', sub: 'Пригород', time: '60 мин', address: 'ул. Парковая, 2', points: '200,300 270,340 270,420 200,460 130,420 130,340' },
+];
+
 const PORTFOLIO_IMAGE = 'https://cdn.poehali.dev/projects/cb066a4a-b259-46cf-8abe-34a46dc855cf/files/6d5352a8-8f9e-4293-a899-478dbceeae6f.jpg';
 
 const PORTFOLIO = [
@@ -34,6 +43,7 @@ interface ContentSectionsProps {
 
 export default function ContentSections({ visible, revealRef: ref }: ContentSectionsProps) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [activeZone, setActiveZone] = useState<number | null>(null);
 
   return (
     <>
@@ -189,6 +199,169 @@ export default function ContentSections({ visible, revealRef: ref }: ContentSect
                 )}
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── MAP / ZONES ── */}
+      <section id="map" className="py-24 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 relative overflow-hidden">
+        {/* Декоративный фон */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-20 left-10 w-72 h-72 rounded-full bg-blue-400 blur-3xl" />
+          <div className="absolute bottom-20 right-10 w-96 h-96 rounded-full bg-blue-600 blur-3xl" />
+        </div>
+
+        <div className="relative max-w-6xl mx-auto px-4">
+          <div
+            ref={ref('map-head')}
+            className={`text-center mb-16 transition-all duration-700 ${visible.has('map-head') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+          >
+            <div className="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/30 rounded-full px-4 py-1.5 mb-4">
+              <Icon name="MapPin" size={13} className="text-orange-400" />
+              <span className="text-orange-300 text-sm font-semibold">Зона охвата</span>
+            </div>
+            <h2 className="font-oswald text-4xl md:text-5xl font-bold text-white">
+              Найдите мастера{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-300 to-orange-500">рядом с вами</span>
+            </h2>
+            <p className="mt-4 text-blue-300 max-w-xl mx-auto">
+              Нажмите на район — узнайте точный адрес и время выезда мастера
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+
+            {/* SVG карта */}
+            <div className="flex items-center justify-center">
+              <div className="relative">
+                <svg
+                  viewBox="0 0 400 510"
+                  className="w-full max-w-sm xl:max-w-md"
+                  style={{ filter: 'drop-shadow(0 30px 60px rgba(0,10,40,0.6))' }}
+                >
+                  {ZONES.map((zone) => {
+                    const isActive = activeZone === zone.id;
+                    const pts = zone.points.split(' ').map(p => p.split(',').map(Number));
+                    const cx = pts.reduce((s, p) => s + p[0], 0) / pts.length;
+                    const cy = pts.reduce((s, p) => s + p[1], 0) / pts.length;
+                    return (
+                      <g key={zone.id} style={{ cursor: 'pointer' }} onClick={() => setActiveZone(isActive ? null : zone.id)}>
+                        <polygon
+                          points={zone.points}
+                          fill={isActive ? '#1d4ed8' : '#1e3a5f'}
+                          stroke={isActive ? '#fb923c' : '#2d5488'}
+                          strokeWidth={isActive ? '3' : '1.5'}
+                          style={{ transition: 'all 0.2s ease' }}
+                        />
+                        {isActive && (
+                          <polygon
+                            points={zone.points}
+                            fill="none"
+                            stroke="#fb923c"
+                            strokeWidth="6"
+                            strokeOpacity="0.25"
+                            style={{ filter: 'blur(2px)' }}
+                          />
+                        )}
+                        <text x={cx} y={cy - 9} textAnchor="middle" fontSize="12" fontWeight="700"
+                          fill={isActive ? 'white' : '#cbd5e1'} fontFamily="'Oswald', sans-serif"
+                          style={{ pointerEvents: 'none' }}>
+                          {zone.name.toUpperCase()}
+                        </text>
+                        <text x={cx} y={cy + 10} textAnchor="middle" fontSize="9.5"
+                          fill={isActive ? '#fdba74' : '#64aed8'} fontFamily="'Golos Text', sans-serif"
+                          style={{ pointerEvents: 'none' }}>
+                          {zone.time}
+                        </text>
+                      </g>
+                    );
+                  })}
+                </svg>
+
+                {/* Подсказка */}
+                {!activeZone && (
+                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-1.5 whitespace-nowrap">
+                    <Icon name="MousePointerClick" size={12} className="text-orange-300" />
+                    <span className="text-white/70 text-xs">Нажмите на район</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Правая панель */}
+            <div className="flex flex-col gap-5">
+
+              {/* Карточка выбранного района */}
+              <div className={`rounded-3xl border transition-all duration-300 overflow-hidden ${activeZone ? 'border-blue-500/50 bg-white/5 backdrop-blur-sm' : 'border-white/10 bg-white/5 backdrop-blur-sm'}`}>
+                {activeZone ? (() => {
+                  const z = ZONES.find(z => z.id === activeZone)!;
+                  return (
+                    <div className="p-6">
+                      <div className="flex items-start gap-4 mb-5">
+                        <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center flex-shrink-0">
+                          <Icon name="MapPin" size={20} className="text-white" />
+                        </div>
+                        <div>
+                          <div className="font-oswald text-2xl font-bold text-white leading-tight">{z.name} район</div>
+                          <div className="text-blue-300 text-sm">{z.sub}</div>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3 mb-5">
+                        <div className="bg-orange-500/10 border border-orange-500/20 rounded-2xl p-4">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Icon name="Clock" size={14} className="text-orange-400" />
+                            <span className="text-orange-300 text-xs font-semibold">Время выезда</span>
+                          </div>
+                          <div className="font-oswald text-2xl font-bold text-orange-300">{z.time}</div>
+                        </div>
+                        <div className="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-4">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Icon name="Navigation" size={14} className="text-blue-400" />
+                            <span className="text-blue-300 text-xs font-semibold">Адрес мастера</span>
+                          </div>
+                          <div className="text-white font-bold text-sm leading-tight">{z.address}</div>
+                        </div>
+                      </div>
+                      <a href="#contacts" className="btn-orange w-full py-3.5 rounded-2xl text-center font-bold text-white text-sm block">
+                        Вызвать мастера в {z.name}
+                      </a>
+                    </div>
+                  );
+                })() : (
+                  <div className="p-8 flex flex-col items-center justify-center text-center gap-3">
+                    <div className="w-16 h-16 rounded-2xl bg-blue-900/60 flex items-center justify-center">
+                      <Icon name="MapPin" size={28} className="text-blue-400" />
+                    </div>
+                    <div className="text-white font-semibold">Выберите ваш район</div>
+                    <div className="text-blue-400 text-sm leading-relaxed max-w-xs">
+                      Нажмите на любой район на карте — мы покажем ближайшего мастера и время выезда
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Список районов */}
+              <div className="grid grid-cols-2 gap-2">
+                {ZONES.map((zone) => (
+                  <button
+                    key={zone.id}
+                    onClick={() => setActiveZone(activeZone === zone.id ? null : zone.id)}
+                    className={`flex items-center justify-between px-4 py-3 rounded-2xl border text-left transition-all ${
+                      activeZone === zone.id
+                        ? 'bg-blue-600 border-blue-500 shadow-lg shadow-blue-900/40'
+                        : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20'
+                    }`}
+                  >
+                    <span className={`font-semibold text-sm ${activeZone === zone.id ? 'text-white' : 'text-blue-200'}`}>
+                      {zone.name}
+                    </span>
+                    <span className={`text-xs font-bold ${activeZone === zone.id ? 'text-orange-300' : 'text-orange-400'}`}>
+                      {zone.time}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
