@@ -14,12 +14,54 @@ export const SERVICES = [
 ];
 
 const ZONES = [
-  { id: 1, x: 50, y: 45, name: 'Центральный', time: '20 мин', color: '#1e88e5' },
-  { id: 2, x: 28, y: 35, name: 'Советский', time: '35 мин', color: '#1565c0' },
-  { id: 3, x: 70, y: 30, name: 'Кировский', time: '40 мин', color: '#0a4a8a' },
-  { id: 4, x: 35, y: 65, name: 'Ленинский', time: '30 мин', color: '#1e88e5' },
-  { id: 5, x: 72, y: 65, name: 'Октябрьский', time: '45 мин', color: '#1565c0' },
-  { id: 6, x: 50, y: 78, name: 'Загородная зона', time: '60 мин', color: '#0a4a8a' },
+  {
+    id: 1,
+    name: 'Центральный',
+    sub: 'Ядро города',
+    time: '20 мин',
+    address: 'ул. Ленина, 45',
+    points: '200,60 270,100 270,180 200,220 130,180 130,100',
+  },
+  {
+    id: 2,
+    name: 'Советский',
+    sub: 'Северо-запад',
+    time: '35 мин',
+    address: 'пр. Победы, 12',
+    points: '90,40 160,80 160,160 90,200 20,160 20,80',
+  },
+  {
+    id: 3,
+    name: 'Кировский',
+    sub: 'Северо-восток',
+    time: '40 мин',
+    address: 'ул. Южная, 88',
+    points: '310,40 380,80 380,160 310,200 240,160 240,80',
+  },
+  {
+    id: 4,
+    name: 'Ленинский',
+    sub: 'Запад',
+    time: '30 мин',
+    address: 'ул. Западная, 3',
+    points: '90,200 160,240 160,320 90,360 20,320 20,240',
+  },
+  {
+    id: 5,
+    name: 'Октябрьский',
+    sub: 'Восток',
+    time: '45 мин',
+    address: 'ул. Восточная, 17',
+    points: '310,200 380,240 380,320 310,360 240,320 240,240',
+  },
+  {
+    id: 6,
+    name: 'Загородная',
+    sub: 'Пригород',
+    time: '60 мин',
+    address: 'ул. Парковая, 2',
+    points: '200,300 270,340 270,420 200,460 130,420 130,340',
+  },
 ];
 
 interface HeroSectionProps {
@@ -155,112 +197,139 @@ export default function HeroSection({ visible, revealRef: ref }: HeroSectionProp
       </section>
 
       {/* ── MAP / ZONES ── */}
-      <section id="map" className="py-24 bg-gradient-to-br from-slate-900 to-blue-900 overflow-hidden relative">
-        <div className="absolute inset-0 bg-mesh opacity-30" />
+      <section id="map" className="py-24 bg-slate-50 overflow-hidden relative">
         <div className="relative max-w-6xl mx-auto px-4">
           <div
             ref={ref('map-head')}
             className={`text-center mb-16 transition-all duration-700 ${visible.has('map-head') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
           >
-            <div className="section-label text-orange-400 mb-3">Зона охвата</div>
-            <h2 className="font-oswald text-4xl md:text-5xl font-bold text-white">
-              Карта зон
+            <div className="section-label mb-3">Зона охвата</div>
+            <h2 className="font-oswald text-4xl md:text-5xl font-bold text-slate-900">
+              Найдите мастера
               <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-300 to-orange-500">обслуживания</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-900">рядом с вами</span>
             </h2>
-            <p className="mt-4 text-blue-300 max-w-xl mx-auto">
+            <p className="mt-4 text-gray-500 max-w-xl mx-auto">
               Нажмите на район — узнайте время выезда мастера
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-5 gap-8 items-center">
-            <div className="lg:col-span-3">
-              <div className="relative bg-blue-900/40 border border-blue-500/20 rounded-3xl overflow-hidden aspect-[4/3]">
-                <svg viewBox="0 0 100 85" className="w-full h-full p-4">
-                  <defs>
-                    <radialGradient id="cityGlow" cx="50%" cy="50%" r="50%">
-                      <stop offset="0%" stopColor="#1e88e5" stopOpacity="0.2" />
-                      <stop offset="100%" stopColor="#0a4a8a" stopOpacity="0.05" />
-                    </radialGradient>
-                  </defs>
-                  <ellipse cx="50" cy="48" rx="42" ry="35" fill="url(#cityGlow)" stroke="#1e88e5" strokeWidth="0.3" strokeDasharray="2,1.5" />
-                  <line x1="50" y1="13" x2="50" y2="80" stroke="#1e88e5" strokeWidth="0.4" strokeOpacity="0.3" />
-                  <line x1="8" y1="48" x2="92" y2="48" stroke="#1e88e5" strokeWidth="0.4" strokeOpacity="0.3" />
-                  <line x1="15" y1="20" x2="85" y2="76" stroke="#1e88e5" strokeWidth="0.2" strokeOpacity="0.15" />
-                  <line x1="85" y1="20" x2="15" y2="76" stroke="#1e88e5" strokeWidth="0.2" strokeOpacity="0.15" />
-
-                  {ZONES.map((zone) => (
-                    <g key={zone.id} style={{ cursor: 'pointer' }} onClick={() => setActiveZone(activeZone === zone.id ? null : zone.id)}>
-                      {activeZone === zone.id && (
-                        <circle cx={zone.x} cy={zone.y} r="7" fill={zone.color} fillOpacity="0.2" />
-                      )}
-                      <circle
-                        cx={zone.x}
-                        cy={zone.y}
-                        r={activeZone === zone.id ? '4.5' : '3.5'}
-                        fill={activeZone === zone.id ? zone.color : '#1e88e5'}
-                        stroke="white"
-                        strokeWidth="1"
-                        style={{ filter: activeZone === zone.id ? `drop-shadow(0 0 4px ${zone.color})` : 'none', transition: 'all 0.3s ease' }}
+          <div className="grid lg:grid-cols-5 gap-10 items-start">
+            {/* Honeycomb map */}
+            <div className="lg:col-span-3 flex items-center justify-center">
+              <svg viewBox="0 0 400 500" className="w-full max-w-md drop-shadow-2xl" style={{ filter: 'drop-shadow(0 20px 60px rgba(15,40,90,0.18))' }}>
+                {ZONES.map((zone) => {
+                  const isActive = activeZone === zone.id;
+                  return (
+                    <g
+                      key={zone.id}
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => setActiveZone(isActive ? null : zone.id)}
+                    >
+                      <polygon
+                        points={zone.points}
+                        fill={isActive ? '#1e3a6e' : '#1a3057'}
+                        stroke={isActive ? '#f97316' : '#2d4a7a'}
+                        strokeWidth={isActive ? '3' : '2'}
+                        style={{ transition: 'all 0.25s ease', filter: isActive ? 'brightness(1.2)' : 'none' }}
                       />
-                      <text
-                        x={zone.x}
-                        y={zone.y + 8}
-                        textAnchor="middle"
-                        fontSize="3.2"
-                        fill={activeZone === zone.id ? 'white' : '#93c5fd'}
-                        fontFamily="'Golos Text', sans-serif"
-                        fontWeight="600"
-                        style={{ pointerEvents: 'none' }}
-                      >
-                        {zone.name}
-                      </text>
+                      {(() => {
+                        const pts = zone.points.split(' ').map(p => p.split(',').map(Number));
+                        const cx = pts.reduce((s, p) => s + p[0], 0) / pts.length;
+                        const cy = pts.reduce((s, p) => s + p[1], 0) / pts.length;
+                        return (
+                          <>
+                            <text
+                              x={cx}
+                              y={cy - 8}
+                              textAnchor="middle"
+                              fontSize="13"
+                              fontWeight="700"
+                              fill="white"
+                              fontFamily="'Oswald', sans-serif"
+                              letterSpacing="1"
+                              style={{ pointerEvents: 'none', textTransform: 'uppercase' }}
+                            >
+                              {zone.name.toUpperCase()}
+                            </text>
+                            <text
+                              x={cx}
+                              y={cy + 12}
+                              textAnchor="middle"
+                              fontSize="10"
+                              fill={isActive ? '#fdba74' : '#93b4d8'}
+                              fontFamily="'Golos Text', sans-serif"
+                              style={{ pointerEvents: 'none' }}
+                            >
+                              {zone.time}
+                            </text>
+                          </>
+                        );
+                      })()}
                     </g>
-                  ))}
+                  );
+                })}
+              </svg>
+            </div>
 
-                  <circle cx="50" cy="45" r="2" fill="#f57c00" stroke="white" strokeWidth="0.8" />
-                  <text x="50" y="42" textAnchor="middle" fontSize="2.8" fill="#ff9800" fontFamily="'Golos Text', sans-serif" fontWeight="700">
-                    База
-                  </text>
-                </svg>
-
-                {activeZone && (
-                  <div className="absolute bottom-4 left-4 right-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 text-white">
-                    <div className="font-bold text-base">{ZONES.find(z => z.id === activeZone)?.name} район</div>
-                    <div className="flex items-center gap-2 mt-1">
-                      <Icon name="Clock" size={14} className="text-orange-300" />
-                      <span className="text-orange-200 text-sm font-medium">
-                        Время выезда: {ZONES.find(z => z.id === activeZone)?.time}
-                      </span>
+            {/* Info panel */}
+            <div className="lg:col-span-2 flex flex-col gap-4 pt-2">
+              {/* Selected zone card */}
+              <div className={`rounded-2xl border-2 p-6 transition-all duration-300 ${activeZone ? 'border-blue-700 bg-white shadow-xl' : 'border-dashed border-blue-200 bg-white/60'}`}>
+                {activeZone ? (() => {
+                  const z = ZONES.find(z => z.id === activeZone)!;
+                  return (
+                    <div>
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-10 h-10 rounded-xl bg-blue-700 flex items-center justify-center">
+                          <Icon name="MapPin" size={18} className="text-white" />
+                        </div>
+                        <div>
+                          <div className="font-oswald text-xl font-bold text-slate-900">{z.name} район</div>
+                          <div className="text-gray-400 text-sm">{z.sub}</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Icon name="Clock" size={15} className="text-orange-500" />
+                        <span className="font-bold text-orange-500">Выезд: {z.time}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-600 text-sm">
+                        <Icon name="Navigation" size={13} className="text-blue-500" />
+                        {z.address}
+                      </div>
+                    </div>
+                  );
+                })() : (
+                  <div className="flex flex-col items-center justify-center py-4 text-center gap-2">
+                    <Icon name="MapPin" size={28} className="text-blue-300" />
+                    <div className="text-gray-400 text-sm leading-relaxed">
+                      Нажмите на интересующий вас район и узнайте адрес ближайшего мастера
                     </div>
                   </div>
                 )}
               </div>
-            </div>
 
-            <div className="lg:col-span-2 flex flex-col gap-3">
-              <div className="text-white font-bold text-lg mb-2">Районы обслуживания</div>
-              {ZONES.map((zone) => (
-                <button
-                  key={zone.id}
-                  onClick={() => setActiveZone(activeZone === zone.id ? null : zone.id)}
-                  className={`flex items-center justify-between p-4 rounded-2xl border transition-all text-left ${
-                    activeZone === zone.id
-                      ? 'bg-blue-700 border-blue-400 shadow-lg shadow-blue-500/20'
-                      : 'bg-white/5 border-white/10 hover:bg-white/10'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: zone.color }} />
-                    <span className="text-white font-medium">{zone.name}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <Icon name="Clock" size={13} className="text-orange-300" />
-                    <span className="text-orange-300 text-sm font-bold">{zone.time}</span>
-                  </div>
-                </button>
-              ))}
-              <a href="#contacts" className="btn-orange mt-2 px-5 py-3.5 rounded-2xl text-center font-bold text-white text-sm">
+              {/* Zones list */}
+              <div className="flex flex-col gap-1.5">
+                {ZONES.map((zone) => (
+                  <button
+                    key={zone.id}
+                    onClick={() => setActiveZone(activeZone === zone.id ? null : zone.id)}
+                    className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all text-left ${
+                      activeZone === zone.id
+                        ? 'bg-blue-700 border-blue-700 text-white shadow-md'
+                        : 'bg-white border-blue-100 hover:border-blue-300 text-slate-700'
+                    }`}
+                  >
+                    <span className="font-semibold text-sm">{zone.address}</span>
+                    <span className={`text-xs font-bold ${activeZone === zone.id ? 'text-orange-300' : 'text-orange-500'}`}>
+                      {zone.time}
+                    </span>
+                  </button>
+                ))}
+              </div>
+
+              <a href="#contacts" className="btn-orange mt-1 px-5 py-3.5 rounded-2xl text-center font-bold text-white text-sm">
                 Оставить заявку
               </a>
             </div>
